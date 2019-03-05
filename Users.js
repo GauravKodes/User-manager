@@ -1,32 +1,16 @@
 import React, { Component } from 'react';
 import User from './User';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { getUsers } from '../../actions/userActions';
 
 class Users extends Component {
-  state = {
-    users: [
-      {
-        id: 1,
-        name: 'John Doe',
-        email: 'john@gmail.com',
-        phone: '555-555-5555'
-      },
-      {
-        id: 2,
-        name: 'Karen Williams',
-        email: 'karen@gmail.com',
-        phone: '444-444-4444'
-      },
-      {
-        id: 3,
-        name: 'Henry Johnson',
-        email: 'henry@gmail.com',
-        phone: '333-333-333'
-      }
-    ]
-  };
+  componentDidMount() {
+    this.props.getUsers();
+  }
 
   render() {
-    const { users } = this.state;
+    const { users } = this.props;
     return (
       <React.Fragment>
         <h1 className="display-4 mb-2">
@@ -40,4 +24,16 @@ class Users extends Component {
   }
 }
 
-export default Users;
+Users.propTypes = {
+  users: PropTypes.array.isRequired,
+  getUsers: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  users: state.user.users
+});
+
+export default connect(
+  mapStateToProps,
+  { getUsers }
+)(Users);

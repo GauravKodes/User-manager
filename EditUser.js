@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import TextInputGroup from '../layout/TextInputGroup';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getUser, updateUser } from '../../actions/userActions';
 
 class EditUser extends Component {
   state = {
@@ -9,7 +12,21 @@ class EditUser extends Component {
     errors: {}
   };
 
-  onSubmit = (e) => {
+  componentWillReceiveProps(nextProps, nextState) {
+    const { name, email, phone } = nextProps.user;
+    this.setState({
+      name,
+      email,
+      phone
+    });
+  }
+
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    this.props.getUser(id);
+  }
+
+  onSubmit = e => {
     e.preventDefault();
 
     const { name, email, phone } = this.state;
@@ -30,15 +47,16 @@ class EditUser extends Component {
       return;
     }
 
+    const { id } = this.props.match.params;
+
     const updUser = {
+      id,
       name,
       email,
       phone
     };
 
-    const { id } = this.props.match.params;
-
-    //// UPDATE USER ////
+    this.props.updateUser(updUser);
 
     // Clear State
     this.setState({
@@ -98,4 +116,16 @@ class EditUser extends Component {
   }
 }
 
-export default EditUser;
+EditUser.propTypes = {
+  user: PropTypes.object.isRequired,
+  getUser: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  user: state.user.user
+});
+
+export default connect(
+  mapStateToProps,
+  { getUser, updateUser }
+)(EditUser);

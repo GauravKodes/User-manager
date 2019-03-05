@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import TextInputGroup from '../layout/TextInputGroup';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { addUser } from '../../actions/userActions';
 
 class AddUser extends Component {
   state = {
@@ -9,7 +12,7 @@ class AddUser extends Component {
     errors: {}
   };
 
-  onSubmit = (e) => {
+  onSubmit = e => {
     e.preventDefault();
 
     const { name, email, phone } = this.state;
@@ -36,7 +39,7 @@ class AddUser extends Component {
       phone
     };
 
-    //// SUBMIT User ////
+    this.props.addUser(newUser);
 
     // Clear State
     this.setState({
@@ -86,7 +89,7 @@ class AddUser extends Component {
             />
             <input
               type="submit"
-              value="Add Contact"
+              value="Add User"
               className="btn btn-light btn-block"
             />
           </form>
@@ -96,4 +99,11 @@ class AddUser extends Component {
   }
 }
 
-export default AddUser;
+AddUser.propTypes = {
+  addUser: PropTypes.func.isRequired
+};
+
+export default connect(
+  null,
+  { addUser }
+)(AddUser);

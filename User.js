@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { deleteUser } from '../../actions/userActions';
 
 class User extends Component {
   state = {
@@ -8,7 +10,7 @@ class User extends Component {
   };
 
   onDeleteClick = id => {
-    //// DELETE USER ////
+    this.props.deleteUser(id);
   };
 
   render() {
@@ -57,7 +59,11 @@ class User extends Component {
 }
 
 User.propTypes = {
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  deleteUser: PropTypes.func.isRequired
 };
 
-export default User;
+export default connect(
+  null,
+  { deleteUser }
+)(User);
